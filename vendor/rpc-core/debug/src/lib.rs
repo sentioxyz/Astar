@@ -16,10 +16,12 @@
 use ethereum::AccessListItem;
 use ethereum_types::{H160, H256, U256};
 use fc_rpc_core::types::Bytes;
+use std::collections::BTreeMap;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use moonbeam_client_evm_tracing::types::single;
 use moonbeam_rpc_core_types::RequestBlockId;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -30,6 +32,21 @@ pub struct TraceParams {
     /// Javascript tracer (we just check if it's Blockscout tracer string)
     pub tracer: Option<String>,
     pub timeout: Option<String>,
+    pub tracer_config: Option<Value>
+}
+
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StorageEntry {
+    pub key: H256,
+    pub value: H256,
+}
+
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StorageRangeResult {
+    pub storage: BTreeMap<H256, StorageEntry>,
+    pub next_key: Option<H256>
 }
 
 #[derive(Debug, Clone, Default, Eq, PartialEq, Deserialize)]
@@ -82,4 +99,13 @@ pub trait Debug {
         id: RequestBlockId,
         params: Option<TraceParams>,
     ) -> RpcResult<Vec<single::TransactionTrace>>;
+    // #[method(name = "debug_storageRangeAt")]
+    // async fn storage_range_at(
+    //     &self,
+    //     block_hash: H256,
+    //     tx_index: u64,
+    //     address: H160,
+    //     start_key: H256,
+    //     limit: u64,
+    // ) -> RpcResult<StorageRangeResult>;
 }
