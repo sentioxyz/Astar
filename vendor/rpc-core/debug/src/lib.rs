@@ -63,13 +63,13 @@ pub trait Debug {
         id: RequestBlockId,
         params: Option<TraceParams>,
     ) -> RpcResult<Vec<single::TransactionTrace>>;
-    #[method(name = "debug_storageRangeAt")]
-    async fn storage_range_at(
-        &self,
-        block_hash: H256,
-        tx_index: u64,
-        address: H160,
-        start_key: H256,
-        limit: u64,
-    ) -> RpcResult<StorageRangeResult>;
+    // #[method(name = "debug_storageRangeAt")]
+    // async fn storage_range_at(
+    //     &self,
+    //     block_hash: H256,
+    //     tx_index: u64,
+    //     address: H160,
+    //     start_key: H256,
+    //     limit: u64,
+    // ) -> RpcResult<StorageRangeResult>;
 }
